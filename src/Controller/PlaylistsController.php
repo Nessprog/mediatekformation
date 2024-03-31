@@ -66,10 +66,14 @@ class PlaylistsController extends AbstractController {
             case "name":
                 $playlists = $this->playlistRepository->findAllOrderByName($ordre);
                 break;
+            case "numberFormation":
+              $playlists = $this->playlistRepository->findAllOrderByNumberFormations($ordre);
+              break;
+            
         }
         $categories = $this->categorieRepository->findAll();
         return $this->render("pages/playlists.html.twig", [
-            'playlists' => $playlists,
+            'playlists' => $playlists,    
             'categories' => $categories            
         ]);
     }          
