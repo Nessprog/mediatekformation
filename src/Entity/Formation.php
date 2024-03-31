@@ -7,6 +7,7 @@ use DateTimeInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=FormationRepository::class)
@@ -27,11 +28,14 @@ class Formation
 
     /**
      * @ORM\Column(type="datetime", nullable=true)
+     * @Assert\NotBlank(message="La date est obligatoire")
+     * @Assert\LessThanOrEqual("now", message="La date ne peut-être postérieure à la date d'aujourd'hui")
      */
     private $publishedAt;
 
     /**
      * @ORM\Column(type="string", length=100, nullable=true)
+     * @Assert\NotBlank(message="Le titre est obligatoire")
      */
     private $title;
 
@@ -42,6 +46,7 @@ class Formation
 
     /**
      * @ORM\Column(type="string", length=20, nullable=true)
+     * @Assert\NotBlank(message="L'id de la vidéo est obligatoire")
      */
     private $videoId;
 
