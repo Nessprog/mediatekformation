@@ -61,18 +61,21 @@ class PlaylistsController extends AbstractController {
      * @param type $ordre
      * @return Response
      */
-    public function sort($champ, $ordre): Response{
+     public function sort($champ, $ordre): Response{
         switch($champ){
             case "name":
                 $playlists = $this->playlistRepository->findAllOrderByName($ordre);
                 break;
-        }
+            case "numberFormation":
+              $playlists = $this->playlistRepository->findAllOrderByNumber($ordre);
+              break;
+        }            
         $categories = $this->categorieRepository->findAll();
         return $this->render("pages/playlists.html.twig", [
             'playlists' => $playlists,
             'categories' => $categories            
         ]);
-    }          
+    }
 	
     /**
      * @Route("/playlists/recherche/{champ}/{table}", name="playlists.findallcontain")

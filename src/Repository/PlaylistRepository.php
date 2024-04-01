@@ -16,6 +16,9 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class PlaylistRepository extends ServiceEntityRepository
 {
+    const FORMATION_FIELD = 'formations';
+    const NAME_FIELD = 'name';
+    
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Playlist::class);
@@ -47,9 +50,9 @@ class PlaylistRepository extends ServiceEntityRepository
      */
     public function findAllOrderByName($ordre): array{
         return $this->createQueryBuilder('p')
-                ->leftjoin('p.formations', 'f')
+                ->leftjoin('p.' . self::FORMATION_FIELD, 'f')
                 ->groupBy('p.id')
-                ->orderBy('p.name', $ordre)
+                ->orderBy('p.' . self::NAME_FIELD, $ordre)
                 ->getQuery()
                 ->getResult();       
     } 
@@ -62,32 +65,46 @@ class PlaylistRepository extends ServiceEntityRepository
      * @param type $table si $champ dans une autre table
      * @return Playlist[]
      */
-    public function findByContainValue($champ, $valeur, $table=""): array{
+    public function findByContainValue($champ, $valeur, $table = ""): array {
         if($valeur==""){
             return $this->findAllOrderByName('ASC');
         }    
         if($table==""){      
             return $this->createQueryBuilder('p')
-                    ->leftjoin('p.formations', 'f')
+                    ->leftjoin('p.' . self::FORMATION_FIELD, 'f')
                     ->where('p.'.$champ.' LIKE :valeur')
                     ->setParameter('valeur', '%'.$valeur.'%')
                     ->groupBy('p.id')
-                    ->orderBy('p.name', 'ASC')
+                    ->orderBy('p.' . self::NAME_FIELD, 'ASC')
                     ->getQuery()
                     ->getResult();              
         }else{   
             return $this->createQueryBuilder('p')
-                    ->leftjoin('p.formations', 'f')
+                    ->leftjoin('p.' . self::FORMATION_FIELD, 'f')
                     ->leftjoin('f.categories', 'c')
                     ->where('c.'.$champ.' LIKE :valeur')
                     ->setParameter('valeur', '%'.$valeur.'%')
                     ->groupBy('p.id')
-                    ->orderBy('p.name', 'ASC')
+                    ->orderBy('p.' . self::NAME_FIELD, 'ASC')
                     ->getQuery()
                     ->getResult();              
             
         }           
     }    
+    
+    /**
+     * Retourne toutes les playlist triées sur le nombre de formations par playlist
+     * @param type $ordre
+     * @return array
+     */
+    public function findAllOrderByNumber($ordre): array{
+        return $this->createQueryBuilder('p')
+                ->leftJoin('p.' . self::FORMATION_FIELD, 'f')
+                ->groupBy('p.id')
+                ->orderBy('COUNT(f)', $ordre)
+                ->getQuery()
+                ->getResult();
+                }
 
 
     
