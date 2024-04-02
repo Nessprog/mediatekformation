@@ -73,16 +73,28 @@ class AdminFormationsController extends AbstractController {
      * @return Response
      */
     public function findAllContain($champ, Request $request, $table = ""): Response {
-        if($this(isCsrfTokenValid('filtre_' . $champ, $request->get('_token')))){
-        $valeur = $request->get("recherche");
-        $formations = $this->formationRepository->findByContainValue($champ, $valeur, $table);
-        $categories = $this->categorieRepository->findAll();
-        return $this->render(self::TEMPLATE_FORMATIONS, [
-                    'formations' => $formations,
-                    'categories' => $categories,
-                    'valeur' => $valeur,
-                    'table' => $table
-        ]);
+         if ($table === "categories") {
+            $valeur = $request->get("recherche");
+            $formations = $this->formationRepository->findByContainValue($champ, $valeur, $table);
+            $categories = $this->categorieRepository->findAll();
+            return $this->render(self::TEMPLATE_FORMATIONS, [
+                        'formations' => $formations,
+                        'categories' => $categories,
+                        'valeur' => $valeur,
+                        'table' => $table
+            ]);
+        } else {
+            if ($this->isCsrfTokenValid('filtre_' . $champ, $request->get('_token'))) {
+                $valeur = $request->get("recherche");
+                $formations = $this->formationRepository->findByContainValue($champ, $valeur, $table);
+                $categories = $this->categorieRepository->findAll();
+                return $this->render(self::TEMPLATE_FORMATIONS, [
+                            'formations' => $formations,
+                            'categories' => $categories,
+                            'valeur' => $valeur,
+                            'table' => $table
+                ]);
+            }
         }
         return $this->redirectToRoute('admin.formations');
     }

@@ -54,5 +54,13 @@ class CategorieRepository extends ServiceEntityRepository
                 ->getQuery()
                 ->getResult();        
     }    
+    
+    public function findByName($nom) : array {
+        return $this->createQueryBuilder('c')
+                ->where('c.name=:name')
+                ->setParameter('name', $nom)
+                ->getQuery()
+                 ->getResult();
+    }
 
 }
