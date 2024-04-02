@@ -12,7 +12,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * Description of AdminFormationsController
+ * Controller des formations côté admin
  *
  * @author inesl
  */
@@ -50,7 +50,7 @@ class AdminFormationsController extends AbstractController {
     }
 
     /**
-     * @Route("/admin/formations/tri/{champ}/{ordre}/{table}", name="admin.formations.sort")
+     * @Route("/admin/tri/{champ}/{ordre}/{table}", name="admin.formations.sort")
      * @param type $champ
      * @param type $ordre
      * @param type $table
@@ -66,7 +66,7 @@ class AdminFormationsController extends AbstractController {
     }
 
     /**
-     * @Route("/admin/formations/recherche/{champ}/{table}", name="admin.formations.findallcontain")
+     * @Route("/admin/recherche/{champ}/{table}", name="admin.formations.findallcontain")
      * @param type $champ
      * @param Request $request
      * @param type $table
@@ -88,7 +88,7 @@ class AdminFormationsController extends AbstractController {
     }
 
     /**
-     * @Route("/admin/formations/suppr/{id}", name="admin.formation.suppr")
+     * @Route("/admin/suppr/{id}", name="admin.formation.suppr")
      * @param Formation $formation
      * @return Response
      */
@@ -98,12 +98,13 @@ class AdminFormationsController extends AbstractController {
     }
     
       /**
-     * @Route("/admin/formations/edit/{id}", name="admin.formation.edit")
+     * @Route("/admin/edit/{id}", name="admin.formation.edit")
      * @param Formation $formation
      * @param Request $request
      * @return Response
      */
     public function edit(Formation $formation, Request $request): Response {
+        $title = "Modifier une formation";
         $formFormation = $this->createForm(FormationType::class, $formation);
 
         $formFormation->handleRequest($request);
@@ -113,17 +114,19 @@ class AdminFormationsController extends AbstractController {
         }
 
         return $this->render("admin/admin.formation.edit.html.twig", [
+            'title' => $title,
             'formation' => $formation,
             'formformation' => $formFormation->createView()
         ]);
     }
 
     /**
-     * @Route("/admin/formations/ajout", name="admin.formation.ajout")
+     * @Route("/admin/ajout", name="admin.formation.ajout")
      * @param Request $request
      * @return Response
      */
     public function ajout(Request $request): Response {
+        $title = "Ajouter une formation";
         $formation = new Formation();
         $formFormation = $this->createForm(FormationType::class, $formation);
 
