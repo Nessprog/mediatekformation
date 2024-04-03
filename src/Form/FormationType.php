@@ -18,6 +18,13 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  * @author inesl
  */
 class FormationType extends AbstractType {
+    
+    /**
+     * Création du formulaire pour ajouter ou modifier une formation
+     * @param FormBuilderInterface $builder
+     * @param array $options
+     * @return void
+     */
     public function buildForm(FormBuilderInterface $builder, array $options): void {
         $builder
                 ->add('publishedAt', null, [
@@ -50,6 +57,11 @@ class FormationType extends AbstractType {
         ;
     }
 
+    /**
+     * Configure les options du formulaire
+     * @param OptionsResolver $resolver
+     * @return void
+     */
     public function configureOptions(OptionsResolver $resolver): void {
         $resolver->setDefaults([
             'data_class' => Formation::class,
